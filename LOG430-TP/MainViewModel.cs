@@ -19,80 +19,33 @@ namespace LOG430_TP
 {
     public class MainViewModel
     {
-        private IMqttClient _MqttClient;
-        private IMqttClientOptions _MqttClientOptions;
         public ObservableCollection<ApplicationMessage> Messages { get; set; }
+
+        private MqttController controller;
 
         public MainViewModel()
         {
-            // Create a new MQTT client.
-            var factory = new MqttFactory();
-            _MqttClient = factory.CreateMqttClient();
+
+            this.controller = new MqttController(this);
             Messages = new ObservableCollection<ApplicationMessage>();
-            // Use TCP connection.
-            _MqttClientOptions = new MqttClientOptionsBuilder()
-               .WithTcpServer("mqtt.cgmu.io", 1883) // Port is optional
-                .Build();
 
-            _MqttClient.UseConnectedHandler(OnConnectedFromServer);
-            _MqttClient.UseDisconnectedHandler(OnDisconnectedFromServer);
-            _MqttClient.UseApplicationMessageReceivedHandler(OnMessageReceived);
-
-            ConnectAsync();
-
-            Console.WriteLine(_MqttClientOptions.ClientId);
-
+            this.controller.connect();
+            
+            this.controller.subscribe("odtf1/ca/qc/mtl/mobil/infra/gateway/ipc0/gat-00000-01/heartbeat");
             Console.ReadLine();
         }
 
-        private async Task ConnectAsync()
+        /// <summary>
+        /// message received event handler
+        /// </summary>
+        /// <param name="applicationMessage"></param>
+        public void messageReceived(ApplicationMessage applicationMessage)
         {
-            await _MqttClient.ConnectAsync(_MqttClientOptions, CancellationToken.None); // Since 3.0.5 with CancellationToken
-        }
-
-        private async void OnConnectedFromServer(MqttClientConnectedEventArgs e)
-        {
-            Console.WriteLine("### CONNECTED WITH SERVER ###");
-
-            // Subscribe to a topic
-            await _MqttClient.SubscribeAsync(new TopicFilterBuilder().WithTopic("worldcongress2017/pilot_resologi/odtf1/ca/qc/mtl/mobil/infra/gateway/ipc0/gat-00000-01/heartbeat").Build());
-            Console.WriteLine("### SUBSCRIBED ###");
-        }
-
-        private async void OnDisconnectedFromServer(MqttClientDisconnectedEventArgs e)
-        {
-            Console.WriteLine("### DISCONNECTED FROM SERVER ###");
-            await Task.Delay(TimeSpan.FromSeconds(5));
-
-            try
-            {
-                await _MqttClient.ConnectAsync(_MqttClientOptions, CancellationToken.None); // Since 3.0.5 with CancellationToken
-            }
-            catch
-            {
-                Console.WriteLine("### RECONNECTING FAILED ###");
-            }
-        }
-
-        private void OnMessageReceived(MqttApplicationMessageReceivedEventArgs e)
-        {
-            var message = new ApplicationMessage
-            {
-                Topic = e.ApplicationMessage.Topic,
-                Payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload),
-                QualityOfServiceLevel = (int)e.ApplicationMessage.QualityOfServiceLevel,
-                Retain = e.ApplicationMessage.Retain
-            };
             Application.Current.Dispatcher.Invoke(() =>
             {
-                Messages.Add(message);
+                Messages.Add(applicationMessage);
             });
-            //Console.WriteLine("### RECEIVED APPLICATION MESSAGE ###");
-            //Console.WriteLine($"+ Topic = {e.ApplicationMessage.Topic}");
-            //Console.WriteLine($"+ Payload = {Encoding.UTF8.GetString(e.ApplicationMessage.Payload)}");
-            //Console.WriteLine($"+ QoS = {e.ApplicationMessage.QualityOfServiceLevel}");
-            //Console.WriteLine($"+ Retain = {e.ApplicationMessage.Retain}");
-            //Console.WriteLine();
+
         }
     }
 }
