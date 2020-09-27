@@ -39,5 +39,18 @@ namespace LOG430_TP
             var topic = vm.TopicSubscribeText;
             vm.Controller.unsubscribe(topic);
         }
+
+        private void UnsubscribeAll_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = (MainViewModel)DataContext;
+            vm.Controller.unsubscribeALL();
+        }
+
+        private void SubscribeAll_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = (MainViewModel)DataContext;
+            vm.Controller.subscribeALL();
+
+        }
     }
 }
