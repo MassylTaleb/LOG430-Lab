@@ -23,6 +23,21 @@ namespace LOG430_TP
         public MainWindow()
         {
             InitializeComponent();
+            
+        }
+
+        private void Subscribe_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = (MainViewModel)DataContext;
+            var topic = vm.TopicSubscribeText;
+            vm.Controller.subscribe(topic);
+        }
+
+        private void Unsubscribe_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = (MainViewModel)DataContext;
+            var topic = vm.TopicSubscribeText;
+            vm.Controller.unsubscribe(topic);
         }
     }
 }

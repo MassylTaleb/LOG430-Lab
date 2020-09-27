@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace LOG430_TP
 {
-    class MqttController
+    public class MqttController
     {
         /// <summary>
         /// the client
