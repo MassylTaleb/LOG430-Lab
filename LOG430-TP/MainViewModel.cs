@@ -30,8 +30,8 @@ namespace LOG430_TP
             Messages = new ObservableCollection<ApplicationMessage>();
 
             this.controller.connect();
-            
-            this.controller.subscribe("odtf1/ca/qc/mtl/mobil/infra/gateway/ipc0/gat-00000-01/heartbeat");
+
+            this.controller.subscribeALL();
             Console.ReadLine();
         }
 
