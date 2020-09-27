@@ -137,33 +137,63 @@ namespace LOG430_TP
         }
 
 
-        public void subscribe(string topic)
+        /// <summary>
+        /// subribes to a topic
+        /// </summary>
+        /// <param name="topic"></param>
+        /// <returns>true if the subscription has been sent, false if the format was wrong</returns>
+        public bool subscribe(string topic)
         {
 
             topic = topic.ToLower();
+            var regexItem = new Regex("^[a-z0-9-+#_/]*$");
 
-            var regexItem = new Regex("^[a-z0-9-+#]*$");
-
-            //if (!regexItem.IsMatch(topic))
-            //{
-            //    Console.WriteLine("Bad Format in topic, forbidden character");
-            //    return;
-            //}
-
-            // Subscribe to a topic
-            this.client.SubscribeAsync(new TopicFilterBuilder().WithTopic(BaseTopic + topic).Build());
-            Console.WriteLine("SUBSCRIBED to topic : " + BaseTopic + topic);
-
+            if (regexItem.IsMatch(topic))
+            {
+                // Subscribe to a topic
+                this.client.SubscribeAsync(new TopicFilterBuilder().WithTopic(BaseTopic + topic).Build());
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
-        /// unsubscribres from a topic
+        /// subscribe to all topics
         /// </summary>
-        /// <param name="topic"></param>
-        public void unsubscribe(string topic)
+        public void subscribeALL()
         {
-            this.client.UnsubscribeAsync(BaseTopic + topic);
+            this.client.SubscribeAsync(new TopicFilterBuilder().WithTopic(BaseTopic + "#").Build());
         }
 
+        /// <summary>
+        /// unsubscire from the topic
+        /// </summary>
+        /// <param name="topic">the topic to unsubsccribe to</param>
+        /// <returns>returns true on successful unsubscribe, else false</returns>
+        public bool unsubscribe(string topic)
+        {
+
+            topic = topic.ToLower();
+            var regexItem = new Regex("^[a-z0-9-+#_/]*$");
+
+            if (regexItem.IsMatch(topic))
+            {
+                this.client.UnsubscribeAsync(BaseTopic + topic);
+                return true;
+            }
+            return false;
+
+        }
+
+
+        /// <summary>
+        /// unsubscribe from all topics
+        /// </summary>
+        public void unsubscribeALL()
+        {
+
+            this.client.UnsubscribeAsync(BaseTopic + "#");
+
+        }
     }
 }
