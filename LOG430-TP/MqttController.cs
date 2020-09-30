@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 
 namespace LOG430_TP
 {
+    /*
+     * Used this git repo to get inspiration: https://github.com/MassylTaleb/LOG430-Lab.git
+     */
     public class MqttController
     {
         /// <summary>
