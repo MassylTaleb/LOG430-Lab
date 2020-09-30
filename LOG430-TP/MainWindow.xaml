@@ -10,7 +10,19 @@
         <local:MainViewModel/>
     </Window.DataContext>
     <Grid>
-        <ScrollViewer>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <TextBox x:Name="_TopicSubscribeTextBox" Text="{Binding TopicSubscribeText}" HorizontalAlignment="Left" Margin="14,0,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.258,0.241" Width="70"/>
+            <Button x:Name="_TopicSubscribeButton"  Content="Subscibe" Margin="8,0,0,0" Click="Subscribe_Click" IsEnabled="{Binding CanSubscribe}"/>
+            <TextBox x:Name="_TopicUnsubscribeTextBox" Text="{Binding TopicUnsubscribeText}" HorizontalAlignment="Right" Margin="30,0,0,0" VerticalAlignment="Top" Width="70"/>
+            <Button x:Name="_TopicUnsubscribeButton"  Content="Unsubscibe" Margin="8,0,0,0" Click="Unsubscribe_Click" IsEnabled="{Binding CanUnsubscribe}"/>
+            <Button Content="Subscibe All" Margin="8,0,0,0" Click="SubscribeAll_Click"/>
+            <Button Content="Unsubscibe All" Margin="8,0,0,0" Click="UnsubscribeAll_Click"/>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible">
             <ItemsControl
                 ItemsSource="{Binding Messages}">
                 <ItemsControl.ItemTemplate>
@@ -29,5 +41,6 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+        
     </Grid>
 </Window>
