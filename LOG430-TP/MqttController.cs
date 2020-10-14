@@ -49,12 +49,14 @@ namespace LOG430_TP
         /// main view
         /// </summary>
         private MainViewModel mainViewModel;
+        private IApplicationMessageRepository _repository;
 
         public MqttController(MainViewModel mainViewModel)
         {
             this.initiateComponents();
             this.InitiateHandlers();
             this.mainViewModel = mainViewModel;
+            _repository = new ApplicationMessageRepository();
         }
 
         /// <summary>
@@ -112,7 +114,7 @@ namespace LOG430_TP
         private ApplicationMessage ApplicationMessageConverter(MqttApplicationMessageReceivedEventArgs message)
         {
 
-            return new ApplicationMessage
+            var appMessage = new ApplicationMessage
             {
                 Topic = message.ApplicationMessage.Topic,
                 Payload = Encoding.UTF8.GetString(message.ApplicationMessage.Payload),
@@ -120,6 +122,9 @@ namespace LOG430_TP
                 Retain = message.ApplicationMessage.Retain
 
             };
+
+            _repository.Add(appMessage);
+            return appMessage;
         }
 
         /// <summary>
