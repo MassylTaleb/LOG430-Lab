@@ -51,6 +51,8 @@ namespace LOG430_TP
         /// </summary>
         private MainViewModel mainViewModel;
 
+        private DatabaseController database;
+
         public MqttController(MainViewModel mainViewModel)
         {
             this.initiateComponents();
@@ -89,7 +91,9 @@ namespace LOG430_TP
             // add observer method to give payload info
             this.client.UseApplicationMessageReceivedHandler(e =>
             {
-                mainViewModel.messageReceived(this.ApplicationMessageToString(this.ApplicationMessageConverter(e)));
+                mainViewModel.messageReceived(this.ApplicationMessageConverter(e));
+
+                
             });
         }
 
@@ -118,8 +122,7 @@ namespace LOG430_TP
                 Topic = message.ApplicationMessage.Topic,
                 Payload = Encoding.UTF8.GetString(message.ApplicationMessage.Payload),
                 QualityOfServiceLevel = (int)message.ApplicationMessage.QualityOfServiceLevel,
-                Retain = message.ApplicationMessage.Retain
-
+                Retain = message.ApplicationMessage.Retain,
             };
         }
 
