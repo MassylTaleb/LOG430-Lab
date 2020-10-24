@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,10 @@ namespace LOG430_TP
     public class ApplicationMessageRepository : IApplicationMessageRepository
     {
         MongoDBContext db = new MongoDBContext();
-        public async Task Add(ApplicationMessage message)
+        public void Add(ApplicationMessage message)
         {
-            await db.ApplicationMessage.InsertOneAsync(message);
+            //Console.WriteLine(db.ApplicationMessage.Find(FilterDefinition<ApplicationMessage>.Empty).First().Payload);
+            db.ApplicationMessage.InsertOne(message);
         }
 
         public Task Delete(string id)
