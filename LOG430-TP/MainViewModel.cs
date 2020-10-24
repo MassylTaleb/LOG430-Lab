@@ -22,7 +22,7 @@ namespace LOG430_TP
 {
     public class MainViewModel : INotifyPropertyChanged 
     {
-        public ObservableCollection<ApplicationMessage> Messages { get; set; }
+        public ObservableCollection<string> Messages { get; set; }
 
         public MqttController Controller { get; private set; }
 
@@ -68,7 +68,7 @@ namespace LOG430_TP
         {
 
             this.Controller = new MqttController(this);
-            Messages = new ObservableCollection<ApplicationMessage>();
+            Messages = new ObservableCollection<string>();
 
             this.Controller.connect();
             
@@ -80,11 +80,11 @@ namespace LOG430_TP
         /// message received event handler
         /// </summary>
         /// <param name="applicationMessage"></param>
-        public void messageReceived(ApplicationMessage applicationMessage)
+        public void messageReceived(string message)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                Messages.Add(applicationMessage);
+                Messages.Add(message);
             });
 
         }

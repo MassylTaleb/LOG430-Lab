@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Collections;
 using System.Windows;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace LOG430_TP
 {
@@ -88,7 +89,7 @@ namespace LOG430_TP
             // add observer method to give payload info
             this.client.UseApplicationMessageReceivedHandler(e =>
             {
-                mainViewModel.messageReceived(this.ApplicationMessageConverter(e));
+                mainViewModel.messageReceived(this.ApplicationMessageToString(this.ApplicationMessageConverter(e)));
             });
         }
 
@@ -122,13 +123,29 @@ namespace LOG430_TP
             };
         }
 
+        private string ApplicationMessageToString (ApplicationMessage applicationMessage)
+        {
+
+            return JsonConvert.SerializeObject(applicationMessage);
+        }
+
         /// <summary>
         /// connects to qtt.cgmu.io:1883
         /// </summary>
-        public void connect()
+        /// <returns>true if connected, else return false</returns>
+        public Boolean connect()
         {
             Task connector = this.client.ConnectAsync(options, CancellationToken.None); // Since 3.0.5 with CancellationToken
-            connector.Wait();
+            var isConnected = connector.Wait(30000, CancellationToken.None);
+
+            if (isConnected == false)
+            {
+            //    mainViewModel.messageReceived(new Messages { message = "Could not connect to database" }) ;
+
+            }
+
+            return isConnected;
+
         }
 
         /// <summary>

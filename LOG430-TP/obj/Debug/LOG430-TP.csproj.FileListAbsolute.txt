@@ -52,3 +52,5 @@ C:\Users\massy\Dev\LOG430-Lab\LOG430-TP\obj\Debug\LOG430-TP.csproj.CoreCompileIn
 C:\Users\massy\Dev\LOG430-Lab\LOG430-TP\obj\Debug\LOG430-TP.csproj.CopyComplete
 C:\Users\massy\Dev\LOG430-Lab\LOG430-TP\obj\Debug\LOG430-TP.exe
 C:\Users\massy\Dev\LOG430-Lab\LOG430-TP\obj\Debug\LOG430-TP.pdb
+C:\Users\Nguyen Phuong Huy\Desktop\Repos\LOG430-Lab\LOG430-TP\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Nguyen Phuong Huy\Desktop\Repos\LOG430-Lab\LOG430-TP\bin\Debug\Newtonsoft.Json.xml
