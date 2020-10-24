@@ -91,8 +91,9 @@ namespace LOG430_TP
             // add observer method to give payload info
             this.client.UseApplicationMessageReceivedHandler(e =>
             {
-                mainViewModel.messageReceived(this.ApplicationMessageConverter(e));
-
+                var appMessage = this.ApplicationMessageConverter(e);
+                mainViewModel.messageReceived(appMessage);
+                this.database.add(appMessage);
                 
             });
         }
@@ -143,7 +144,9 @@ namespace LOG430_TP
 
             if (isConnected == false)
             {
-            //    mainViewModel.messageReceived(new Messages { message = "Could not connect to database" }) ;
+                MessageBox.Show("Could not connect to Montreal's MQTT server", "error", MessageBoxButton.YesNo, MessageBoxImage.Error);
+
+                // read from old database value
 
             }
 
