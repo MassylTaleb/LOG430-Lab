@@ -23,8 +23,8 @@ namespace LOG430_TP
                 ApplicationName = "LOG430",
             };
 
-            _mongoClient = new MongoClient(mongoClientSettings);
-            //_mongoClient = new MongoClient("mongodb://massyl:<Massyl-10>@log430-shard-00-00.upspr.mongodb.net:27017,log430-shard-00-01.upspr.mongodb.net:27017,log430-shard-00-02.upspr.mongodb.net:27017/<LOG430>?ssl=true&replicaSet=atlas-vigfsa-shard-0&authSource=admin&retryWrites=true&w=majority");
+            //_mongoClient = new MongoClient(mongoClientSettings);
+            _mongoClient = new MongoClient("mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false");
             _db = _mongoClient.GetDatabase("LOG430");
         }
 

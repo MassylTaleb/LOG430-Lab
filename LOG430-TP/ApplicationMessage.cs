@@ -20,5 +20,7 @@ namespace LOG430_TP
         public int QualityOfServiceLevel { get; set; }
 
         public bool Retain { get; set; }
+
+        public DateTime DateTime { get; set; }
     }
 }
