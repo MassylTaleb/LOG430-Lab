@@ -12,6 +12,6 @@ namespace LOG430_TP
         Task Update(ApplicationMessage message);
         Task Delete(string id);
         Task<ApplicationMessage> GetApplicationMessage(string id);
-        Task<IEnumerable<ApplicationMessage>> GetApplicationMessages();
+        Task<List<ApplicationMessage>> GetApplicationMessages();
     }
 }

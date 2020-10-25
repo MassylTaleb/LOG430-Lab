@@ -9,11 +9,28 @@ namespace LOG430_TP
 {
     public class ApplicationMessageRepository : IApplicationMessageRepository
     {
-        MongoDBContext db = new MongoDBContext();
+        private static ApplicationMessageRepository _Instance;
+        public static ApplicationMessageRepository Instance
+        {
+            get
+            {
+                if (_Instance == null)
+                    _Instance = new ApplicationMessageRepository();
+
+                return _Instance;
+            }
+        }
+
+        private MongoDBContext _DataBase;
+
+        private ApplicationMessageRepository() 
+        {
+            _DataBase = new MongoDBContext();
+        }
+
         public void Add(ApplicationMessage message)
         {
-            //Console.WriteLine(db.ApplicationMessage.Find(FilterDefinition<ApplicationMessage>.Empty).First().Payload);
-            db.ApplicationMessage.InsertOne(message);
+            _DataBase.ApplicationMessage.InsertOne(message);
         }
 
         public Task Delete(string id)
@@ -26,9 +43,9 @@ namespace LOG430_TP
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<ApplicationMessage>> GetApplicationMessages()
+        public Task<List<ApplicationMessage>> GetApplicationMessages()
         {
-            throw new NotImplementedException();
+            return _DataBase.ApplicationMessage.Find(_ => true).ToListAsync();
         }
 
         public Task Update(ApplicationMessage message)

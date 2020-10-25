@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Collections;
 using System.Windows;
 using System.Threading.Tasks;
+using LOG430_TP.ViewModels;
 
 namespace LOG430_TP
 {
@@ -45,18 +46,16 @@ namespace LOG430_TP
         /// </summary>
         private const string BaseTopic = "worldcongress2017/pilot_resologi/";
 
-        /// <summary>
-        /// main view
-        /// </summary>
-        private MainViewModel mainViewModel;
         private IApplicationMessageRepository _repository;
 
-        public MqttController(MainViewModel mainViewModel)
+        public delegate void ApplicationMessageReceivedEvenHandler(ApplicationMessage applicationMessage);
+        public event ApplicationMessageReceivedEvenHandler ApplicationMessagedReceived;
+
+        public MqttController(IApplicationMessageRepository repository)
         {
             this.initiateComponents();
             this.InitiateHandlers();
-            this.mainViewModel = mainViewModel;
-            _repository = new ApplicationMessageRepository();
+            _repository = repository;
         }
 
         /// <summary>
@@ -90,7 +89,7 @@ namespace LOG430_TP
             // add observer method to give payload info
             this.client.UseApplicationMessageReceivedHandler(e =>
             {
-                mainViewModel.messageReceived(this.ApplicationMessageConverter(e));
+                ApplicationMessagedReceived?.Invoke(ApplicationMessageConverter(e));
             });
         }
 
