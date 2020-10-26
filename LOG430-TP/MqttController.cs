@@ -121,7 +121,7 @@ namespace LOG430_TP
                 Payload = Encoding.UTF8.GetString(payload),
                 QualityOfServiceLevel = (int)message.ApplicationMessage.QualityOfServiceLevel,
                 Retain = message.ApplicationMessage.Retain,
-                DateTime = this.PayloadModelConverter(payload).CreateUtc.ToUniversalTime()
+                DateTime = this.PayloadModelConverter(payload).CreateUtc
 
             };
 
@@ -129,10 +129,12 @@ namespace LOG430_TP
             return appMessage;
         }
 
-        private PayloadModel PayloadModelConverter (byte[] payload)
+        private PayloadModel PayloadModelConverter(byte[] payload)
         {
 
             var payloadModel = JsonSerializer.Deserialize<PayloadModel>(payload);
+            var correctDate = DateTime.SpecifyKind(payloadModel.CreateUtc, DateTimeKind.Utc);
+            payloadModel.CreateUtc = correctDate;
 
             return payloadModel;
         }
@@ -140,10 +142,13 @@ namespace LOG430_TP
         /// <summary>
         /// connects to qtt.cgmu.io:1883
         /// </summary>
-        public void connect()
+        /// <returns>returns true if connected else return false</returns>
+        public bool connect()
         {
             Task connector = this.client.ConnectAsync(options, CancellationToken.None); // Since 3.0.5 with CancellationToken
-            connector.Wait();
+            connector.Wait(60000, CancellationToken.None);
+
+            return this.client.IsConnected;
         }
 
         /// <summary>

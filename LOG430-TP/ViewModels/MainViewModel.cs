@@ -150,10 +150,17 @@ namespace LOG430_TP.ViewModels
             _StatisticComputers.Add(Statistic.Sum, new SumComputer());
             _StatisticComputers.Add(Statistic.Mean, new MeanComputer());
 
-            Controller.connect();
+            var connection = Controller.connect();
+
+            if (connection == false)
+            {
+                MessageBox.Show("Could not connect to mqttDatabase. Will now be in degraded mode", "error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
             var testRepos = ApplicationMessageRepository.Instance;
-         var x  = testRepos.getApplicationMessages(new DateTime(2020,10,25,22,21,54), new DateTime(2020, 10, 27));
+            var startDate = DateTime.SpecifyKind(new DateTime(2020, 10, 26, 20, 20, 25), DateTimeKind.Utc);
+            var endDate = DateTime.SpecifyKind(new DateTime(2020, 10, 26, 20, 20, 28), DateTimeKind.Utc);
+            var x  = testRepos.getApplicationMessages(startDate,endDate);
             x.Wait();
 
             var y = 4;
@@ -207,42 +214,47 @@ namespace LOG430_TP.ViewModels
 
         private void ComputeStats()
         {
-            CurrentStatisticResult = 0;
 
-            var messages = ApplicationMessageRepository.Instance.GetApplicationMessages()?.Result;
+            var applicationMessages = ApplicationMessageRepository.Instance.getApplicationMessages(_StatsTopicText, _StatsStartDateTime, StatsEndDateTime);
 
-            Regex valueRegex = new Regex(_ApplicationMessagePayloadValueRegexPattern);
-            Regex utcRegex = new Regex(_ApplicationMessagePayloadCreateUTCRegexPattern);
+            var values = this.applicationMessageValuesList(applicationMessages.Result);
 
-            if (messages == null)
-                return;
+            //CurrentStatisticResult = 0;
 
-            List<float> values = new List<float>();
+            //var messages = ApplicationMessageRepository.Instance.GetApplicationMessages()?.Result;
 
-            foreach (var message in messages)
-            {
-                if (message.Topic != _StatsTopicText)
-                    continue;
+            //Regex valueRegex = new Regex(_ApplicationMessagePayloadValueRegexPattern);
+            //Regex utcRegex = new Regex(_ApplicationMessagePayloadCreateUTCRegexPattern);
 
-                Match valueMatch = valueRegex.Match(message.Payload);
-                Match utcMatch = utcRegex.Match(message.Payload);
+            //if (messages == null)
+            //    return;
 
-                if (!valueMatch.Success || !utcMatch.Success)
-                    continue;
+            //List<float> values = new List<float>();
 
-                string value = valueMatch.Groups["value"].Value;
-                string utcString = utcMatch.Groups["createUtc"].Value;
+            //foreach (var message in messages)
+            //{
+            //    if (message.Topic != _StatsTopicText)
+            //        continue;
+
+            //    Match valueMatch = valueRegex.Match(message.Payload);
+            //    Match utcMatch = utcRegex.Match(message.Payload);
+
+            //    if (!valueMatch.Success || !utcMatch.Success)
+            //        continue;
+
+            //    string value = valueMatch.Groups["value"].Value;
+            //    string utcString = utcMatch.Groups["createUtc"].Value;
 
 
-                // check date
-                if (!DateTime.TryParse(utcString, out DateTime createUtcTime) || !float.TryParse(value, out float floatValue))
-                    continue;
+            //    // check date
+            //    if (!DateTime.TryParse(utcString, out DateTime createUtcTime) || !float.TryParse(value, out float floatValue))
+            //        continue;
 
-                if (createUtcTime > StatsStartDateTime.ToUniversalTime() && createUtcTime < StatsEndDateTime.ToUniversalTime())
-                    values.Add(floatValue);
-                else
-                    continue;
-            }
+            //    if (createUtcTime > StatsStartDateTime.ToUniversalTime() && createUtcTime < StatsEndDateTime.ToUniversalTime())
+            //        values.Add(floatValue);
+            //    else
+            //        continue;
+            //}
 
             if (!_StatisticComputers.TryGetValue(_CurrentStatistic, out IStatisticComputer<float, float> statisticComputer))
                 return;
@@ -250,6 +262,31 @@ namespace LOG430_TP.ViewModels
             // uses the good compute
             if(values.Count > 0)
                 CurrentStatisticResult = statisticComputer.Compute(values);
+        }
+
+        private List<float> applicationMessageValuesList (List<ApplicationMessage> messages)
+        {
+            var values = new List<float>();
+
+            Regex valueRegex = new Regex(_ApplicationMessagePayloadValueRegexPattern);
+
+            foreach (ApplicationMessage message in messages)
+            {
+                Match valueMatch = valueRegex.Match(message.Payload);
+                string value = valueMatch.Groups["value"].Value;
+
+
+                if (!float.TryParse(value, out float floatValue))
+                {
+                    MessageBox.Show("Topic value is not a number", "error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return new List<float>();
+                }
+
+                values.Add(floatValue);
+
+            }
+
+            return values;
         }
 
         #region INotifyPropertyChanged Implementation

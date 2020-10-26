@@ -9,8 +9,7 @@ namespace LOG430_TP.Models.StatisticComputers
 {
     public class MedianComputer : IStatisticComputer<float, float>
     {
-        public MedianComputer()
-        {
+        
             public float Compute(IEnumerable<float> values)
             {
 
@@ -32,7 +31,7 @@ namespace LOG430_TP.Models.StatisticComputers
                 float test = 1;
                 return test;
             }
-        }
+        
 
         
     }
