@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,18 @@ namespace LOG430_TP
         public Task<List<ApplicationMessage>> GetApplicationMessages()
         {
             return _DataBase.ApplicationMessage.Find(_ => true).ToListAsync();
+        }
+
+        /// <summary>
+        /// returns all applicationMessages created between the time
+        /// </summary>
+        /// <param name="startDate">minimum creation date</param>
+        /// <param name="endDate">maximum creation date</param>
+        /// <returns></returns>
+        public Task <List<ApplicationMessage>> getApplicationMessages (DateTime startDate , DateTime endDate)
+        {
+ 
+            return _DataBase.ApplicationMessage.Find(x => x.DateTime >= startDate && x.DateTime < endDate).ToListAsync() ;
         }
 
         public Task Update(ApplicationMessage message)

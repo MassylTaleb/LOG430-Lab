@@ -13,6 +13,8 @@ using System.Collections;
 using System.Windows;
 using System.Threading.Tasks;
 using LOG430_TP.ViewModels;
+using MongoDB.Driver.Core.WireProtocol.Messages;
+using System.Text.Json;
 
 namespace LOG430_TP
 {
@@ -112,18 +114,27 @@ namespace LOG430_TP
         /// <returns></returns>
         private ApplicationMessage ApplicationMessageConverter(MqttApplicationMessageReceivedEventArgs message)
         {
-
+            var payload = message.ApplicationMessage.Payload;
             var appMessage = new ApplicationMessage
             {
                 Topic = message.ApplicationMessage.Topic,
-                Payload = Encoding.UTF8.GetString(message.ApplicationMessage.Payload),
+                Payload = Encoding.UTF8.GetString(payload),
                 QualityOfServiceLevel = (int)message.ApplicationMessage.QualityOfServiceLevel,
-                Retain = message.ApplicationMessage.Retain
+                Retain = message.ApplicationMessage.Retain,
+                DateTime = this.PayloadModelConverter(payload).CreateUtc.ToUniversalTime()
 
             };
 
             _repository.Add(appMessage);
             return appMessage;
+        }
+
+        private PayloadModel PayloadModelConverter (byte[] payload)
+        {
+
+            var payloadModel = JsonSerializer.Deserialize<PayloadModel>(payload);
+
+            return payloadModel;
         }
 
         /// <summary>

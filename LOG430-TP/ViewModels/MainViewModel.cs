@@ -151,6 +151,13 @@ namespace LOG430_TP.ViewModels
             _StatisticComputers.Add(Statistic.Mean, new MeanComputer());
 
             Controller.connect();
+
+            var testRepos = ApplicationMessageRepository.Instance;
+         var x  = testRepos.getApplicationMessages(new DateTime(2020,10,25,22,21,54), new DateTime(2020, 10, 27));
+            x.Wait();
+
+            var y = 4;
+
         }
 
         /// <summary>
@@ -226,6 +233,8 @@ namespace LOG430_TP.ViewModels
                 string value = valueMatch.Groups["value"].Value;
                 string utcString = utcMatch.Groups["createUtc"].Value;
 
+
+                // check date
                 if (!DateTime.TryParse(utcString, out DateTime createUtcTime) || !float.TryParse(value, out float floatValue))
                     continue;
 
@@ -238,6 +247,7 @@ namespace LOG430_TP.ViewModels
             if (!_StatisticComputers.TryGetValue(_CurrentStatistic, out IStatisticComputer<float, float> statisticComputer))
                 return;
 
+            // uses the good compute
             if(values.Count > 0)
                 CurrentStatisticResult = statisticComputer.Compute(values);
         }
