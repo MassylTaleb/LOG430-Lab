@@ -48,16 +48,14 @@ namespace LOG430_TP
         /// </summary>
         private const string BaseTopic = "worldcongress2017/pilot_resologi/";
 
-        private IApplicationMessageRepository _repository;
 
         public delegate void ApplicationMessageReceivedEvenHandler(ApplicationMessage applicationMessage);
         public event ApplicationMessageReceivedEvenHandler ApplicationMessagedReceived;
 
-        public MqttController(IApplicationMessageRepository repository)
+        public MqttController()
         {
             this.initiateComponents();
             this.InitiateHandlers();
-            _repository = repository;
         }
 
         /// <summary>
@@ -125,7 +123,6 @@ namespace LOG430_TP
 
             };
 
-            _repository.Add(appMessage);
             return appMessage;
         }
 

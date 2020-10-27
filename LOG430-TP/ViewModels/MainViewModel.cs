@@ -27,6 +27,7 @@ namespace LOG430_TP.ViewModels
     {
         private static readonly string _ApplicationMessagePayloadValueRegexPattern = "\"Value\":(?<value>.+)}";
         private static readonly string _ApplicationMessagePayloadCreateUTCRegexPattern = "\"CreateUtc\":\"(?<createUtc>.+?)\"";
+        private ApplicationMessageRepository repos;
 
         public ObservableCollection<ApplicationMessage> MessagesCache { get; set; }
 
@@ -129,9 +130,10 @@ namespace LOG430_TP.ViewModels
 
         public MainViewModel()
         {
-            Controller = new MqttController(ApplicationMessageRepository.Instance);
+            Controller = new MqttController();
             Controller.ApplicationMessagedReceived += MessageReceived;
             MessagesCache = new ObservableCollection<ApplicationMessage>();
+            repos = ApplicationMessageRepository.Instance;
 
             _IsScubscribedToAll = false;
 
@@ -147,8 +149,9 @@ namespace LOG430_TP.ViewModels
             _StatsEndDateTime = DateTime.Now;
 
             _StatisticComputers = new Dictionary<Statistic, IStatisticComputer<float, float>>();
-            _StatisticComputers.Add(Statistic.Sum, new SumComputer());
+            _StatisticComputers.Add(Statistic.Median, new MedianComputer());
             _StatisticComputers.Add(Statistic.Mean, new MeanComputer());
+            _StatisticComputers.Add(Statistic.StandardDeviation, new StandardDeviationComputer());
 
             var connection = Controller.connect();
 
@@ -160,7 +163,7 @@ namespace LOG430_TP.ViewModels
             var testRepos = ApplicationMessageRepository.Instance;
             var startDate = DateTime.SpecifyKind(new DateTime(2020, 10, 26, 20, 20, 25), DateTimeKind.Utc);
             var endDate = DateTime.SpecifyKind(new DateTime(2020, 10, 26, 20, 20, 28), DateTimeKind.Utc);
-            var x  = testRepos.getApplicationMessages(startDate,endDate);
+            var x  = testRepos.GetApplicationMessages(startDate,endDate);
             x.Wait();
 
             var y = 4;
@@ -179,6 +182,7 @@ namespace LOG430_TP.ViewModels
                     MessagesCache.RemoveAt(0);
 
                 MessagesCache.Add(applicationMessage);
+                repos.Add(applicationMessage);
             });
         }
 
@@ -212,6 +216,34 @@ namespace LOG430_TP.ViewModels
         }
 
 
+
+        private void ComputeStats()
+        {
+
+            List<ApplicationMessage> applicationMessages = new List<ApplicationMessage>();
+
+            try
+            {
+
+                applicationMessages = repos.GetApplicationMessages(_StatsTopicText, _StatsStartDateTime, StatsEndDateTime).Result;
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Could not connect to own database.", "error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            }
+
+            var values = this.applicationMessageValuesList(applicationMessages);
+            if (!_StatisticComputers.TryGetValue(_CurrentStatistic, out IStatisticComputer<float, float> statisticComputer))
+                return;
+
+            // uses the good compute
+            if (values.Count > 0)
+                CurrentStatisticResult = statisticComputer.Compute(values);
+        }
+
+        /*
         private void ComputeStats()
         {
 
@@ -262,7 +294,8 @@ namespace LOG430_TP.ViewModels
             // uses the good compute
             if(values.Count > 0)
                 CurrentStatisticResult = statisticComputer.Compute(values);
-        }
+        }*/
+
 
         private List<float> applicationMessageValuesList (List<ApplicationMessage> messages)
         {
@@ -308,6 +341,7 @@ namespace LOG430_TP.ViewModels
     public enum Statistic
     { 
         Mean,
-        Sum
+        Median,
+        StandardDeviation
     }
 }

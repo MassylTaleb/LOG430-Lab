@@ -55,18 +55,18 @@ namespace LOG430_TP
         /// <param name="startDate">minimum creation date in UTC</param>
         /// <param name="endDate">maximum creation date in UTC</param>
         /// <returns></returns>
-        public Task <List<ApplicationMessage>> getApplicationMessages (DateTime startDate , DateTime endDate)
+        public Task <List<ApplicationMessage>> GetApplicationMessages (DateTime startDate , DateTime endDate)
         {
  
             return _DataBase.ApplicationMessage.Find(x => x.DateTime >= startDate && x.DateTime < endDate).ToListAsync() ;
         }
 
 
-        public Task<List<ApplicationMessage>> getApplicationMessages(string topic, DateTime startDate, DateTime endDate)
+        public Task<List<ApplicationMessage>> GetApplicationMessages(string topic, DateTime startDate, DateTime endDate)
         {
 
             if (String.IsNullOrEmpty(topic))
-                return this.getApplicationMessages(startDate, endDate);
+                return this.GetApplicationMessages(startDate, endDate);
 
             return _DataBase.ApplicationMessage.Find(x => x.Topic == topic   && x.DateTime >= startDate && x.DateTime < endDate).ToListAsync();
         }
