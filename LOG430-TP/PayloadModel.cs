@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LOG430_TP
 {
-    class PayloadModel
+    public class PayloadModel
     {
         public DateTime CreateUtc { get; set; }
         public string Unit { get; set; }

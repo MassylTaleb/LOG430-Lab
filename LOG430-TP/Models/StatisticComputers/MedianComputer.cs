@@ -9,31 +9,26 @@ namespace LOG430_TP.Models.StatisticComputers
 {
     public class MedianComputer : IStatisticComputer<float, float>
     {
-        public MedianComputer()
+
+        public float Compute(IEnumerable<float> values)
         {
-            public float Compute(IEnumerable<float> values)
+
+            if (values.Count() == 1)
             {
-
-                /*            values.Sort();
-
-                            if (values.Count == 1)
-                            {
-                                return values.First() + firstPayload.Unit;
-                            }
-
-                            if (values.Count % 2 == 0)
-                            {
-                                var firstValue = values[values.Count / 2];
-                                var secondValue = values[values.Count / 2 + 1];
-                                return (firstValue + secondValue) / 2.0 + firstPayload.Unit;
-                            }
-
-                            return values[(values.Count + 1) / 2] + firstPayload.Unit;*/
-                float test = 1;
-                return test;
+                return values.First();
             }
-        }
 
-        
+            List<float> sortedValues = values.OrderBy(number=>number).ToList();
+
+
+            if (sortedValues.Count % 2 == 0)
+            {
+                var firstValue = sortedValues[sortedValues.Count / 2];
+                var secondValue = sortedValues[sortedValues.Count / 2 + 1];
+                return (float) ((firstValue + secondValue) / 2.0);
+            }
+
+            return sortedValues[(sortedValues.Count + 1) / 2];
+        }
     }
 }

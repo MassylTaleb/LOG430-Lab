@@ -147,13 +147,15 @@ namespace LOG430_TP.ViewModels
             _StatsEndDateTime = DateTime.Now;
 
             _StatisticComputers = new Dictionary<Statistic, IStatisticComputer<float, float>>();
-            _StatisticComputers.Add(Statistic.Sum, new SumComputer());
+            _StatisticComputers.Add(Statistic.Median, new MedianComputer());
             _StatisticComputers.Add(Statistic.Mean, new MeanComputer());
+            _StatisticComputers.Add(Statistic.StandardDeviation, new StandardDeviationComputer());
+
 
             Controller.connect();
 
             var testRepos = ApplicationMessageRepository.Instance;
-         var x  = testRepos.getApplicationMessages(new DateTime(2020,10,25,22,21,54), new DateTime(2020, 10, 27));
+            var x  = testRepos.getApplicationMessages(new DateTime(2020,10,25,22,21,54), new DateTime(2020, 10, 27));
             x.Wait();
 
             var y = 4;
@@ -271,6 +273,7 @@ namespace LOG430_TP.ViewModels
     public enum Statistic
     { 
         Mean,
-        Sum
+        Median,
+        StandardDeviation
     }
 }
