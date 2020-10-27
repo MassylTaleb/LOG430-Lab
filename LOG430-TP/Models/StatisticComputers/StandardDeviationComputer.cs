@@ -19,7 +19,7 @@ namespace LOG430_TP.Models.StatisticComputers
             {
                 valueMinusAverageTotal += Math.Pow(value - average, 2);
             }
-            return (float) Math.Sqrt(valueMinusAverageTotal / values.Count());
+            return (float) Math.Sqrt(valueMinusAverageTotal / (values.Count()-1));
         }
     }
 }
