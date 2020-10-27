@@ -52,13 +52,23 @@ namespace LOG430_TP
         /// <summary>
         /// returns all applicationMessages created between the time
         /// </summary>
-        /// <param name="startDate">minimum creation date</param>
-        /// <param name="endDate">maximum creation date</param>
+        /// <param name="startDate">minimum creation date in UTC</param>
+        /// <param name="endDate">maximum creation date in UTC</param>
         /// <returns></returns>
         public Task <List<ApplicationMessage>> getApplicationMessages (DateTime startDate , DateTime endDate)
         {
  
             return _DataBase.ApplicationMessage.Find(x => x.DateTime >= startDate && x.DateTime < endDate).ToListAsync() ;
+        }
+
+
+        public Task<List<ApplicationMessage>> getApplicationMessages(string topic, DateTime startDate, DateTime endDate)
+        {
+
+            if (String.IsNullOrEmpty(topic))
+                return this.getApplicationMessages(startDate, endDate);
+
+            return _DataBase.ApplicationMessage.Find(x => x.Topic == topic   && x.DateTime >= startDate && x.DateTime < endDate).ToListAsync();
         }
 
         public Task Update(ApplicationMessage message)
