@@ -222,10 +222,11 @@ namespace LOG430_TP.ViewModels
 
             List<ApplicationMessage> applicationMessages = new List<ApplicationMessage>();
 
+            var currentDate = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
             try
             {
 
-                applicationMessages = repos.GetApplicationMessages(_StatsTopicText, _StatsStartDateTime, StatsEndDateTime).Result;
+                applicationMessages = repos.GetApplicationMessages(_StatsTopicText, currentDate.AddSeconds(-10), currentDate).Result;
 
             }
             catch (Exception e)
@@ -242,6 +243,11 @@ namespace LOG430_TP.ViewModels
             if (values.Count > 0)
             {
                 CurrentStatisticResult = statisticComputer.Compute(values);
+
+                // to trick mango db
+
+                var aggregatorValue = new AggregatorModel { Topic = _StatsTopicText, Type = _CurrentStatistic.ToString(), Value = CurrentStatisticResult, DateTime = currentDate };
+                repos.AddAggregator(aggregatorValue);
             }
                 
         }

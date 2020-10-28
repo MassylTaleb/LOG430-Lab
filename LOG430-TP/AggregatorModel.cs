@@ -14,12 +14,13 @@ namespace LOG430_TP
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        public float Value { get; set; }
-        
-        public string Type { get; set; }
-
         public string Topic { get; set; }
 
+        public float Value { get; set; }
+
         public DateTime DateTime { get; set; }
+
+        public string Type { get; set; }
+
     }
 }
