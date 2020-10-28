@@ -240,7 +240,10 @@ namespace LOG430_TP.ViewModels
 
             // uses the good compute
             if (values.Count > 0)
+            {
                 CurrentStatisticResult = statisticComputer.Compute(values);
+            }
+                
         }
 
         /*
