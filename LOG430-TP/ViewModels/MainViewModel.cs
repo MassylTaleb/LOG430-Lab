@@ -177,7 +177,10 @@ namespace LOG430_TP.ViewModels
 
         void timer_Tick(object sender, EventArgs e)
         {
-            ComputeStats();
+            if (!string.IsNullOrEmpty(_StatsTopicText)){
+                ComputeStats();
+            }
+            
         }
 
         /// <summary>
