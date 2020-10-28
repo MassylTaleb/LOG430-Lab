@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace LOG430_TP.ViewModels
 {
@@ -130,6 +131,10 @@ namespace LOG430_TP.ViewModels
 
         public MainViewModel()
         {
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(10);
+            timer.Tick += timer_Tick;
+            timer.Start();
             Controller = new MqttController();
             Controller.ApplicationMessagedReceived += MessageReceived;
             MessagesCache = new ObservableCollection<ApplicationMessage>();
@@ -168,6 +173,11 @@ namespace LOG430_TP.ViewModels
 
             var y = 4;
 
+        }
+
+        void timer_Tick(object sender, EventArgs e)
+        {
+            ComputeStats();
         }
 
         /// <summary>
