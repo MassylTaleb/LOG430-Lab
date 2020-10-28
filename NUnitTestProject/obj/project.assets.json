@@ -1225,6 +1225,15 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XPath.XmlDocument.dll": {}
         }
+      },
+      "LOG430-TP/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/LOG430-TP.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/LOG430-TP.dll": {}
+        }
       }
     }
   },
@@ -4618,31 +4627,41 @@
         "system.xml.xpath.xmldocument.4.3.0.nupkg.sha512",
         "system.xml.xpath.xmldocument.nuspec"
       ]
+    },
+    "LOG430-TP/1.0.0": {
+      "type": "project",
+      "path": "../LOG430-TP/LOG430-TP.csproj",
+      "msbuildProject": "../LOG430-TP/LOG430-TP.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
-      "D:\\Users\\Nicolas\\Documents\\ETS\\Session8\\LOG430\\Lab1\\API\\LOG430-TP\\LOG430-TP.csproj",
+      "LOG430-TP >= 1.0.0",
       "Microsoft.NET.Test.Sdk >= 16.4.0",
       "NUnit3TestAdapter >= 3.15.1",
       "nunit >= 3.12.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Nicolas\\.nuget\\packages\\": {}
+    "C:\\Users\\massy\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Users\\Nicolas\\Documents\\ETS\\Session8\\LOG430\\Lab1\\API\\NUnitTestProject\\NUnitTestProject.csproj",
+      "projectUniqueName": "C:\\Users\\massy\\Dev\\LOG430-Lab\\NUnitTestProject\\NUnitTestProject.csproj",
       "projectName": "NUnitTestProject",
-      "projectPath": "D:\\Users\\Nicolas\\Documents\\ETS\\Session8\\LOG430\\Lab1\\API\\NUnitTestProject\\NUnitTestProject.csproj",
-      "packagesPath": "C:\\Users\\Nicolas\\.nuget\\packages\\",
-      "outputPath": "D:\\Users\\Nicolas\\Documents\\ETS\\Session8\\LOG430\\Lab1\\API\\NUnitTestProject\\obj\\",
+      "projectPath": "C:\\Users\\massy\\Dev\\LOG430-Lab\\NUnitTestProject\\NUnitTestProject.csproj",
+      "packagesPath": "C:\\Users\\massy\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\massy\\Dev\\LOG430-Lab\\NUnitTestProject\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Nicolas\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\massy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -4654,8 +4673,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "D:\\Users\\Nicolas\\Documents\\ETS\\Session8\\LOG430\\Lab1\\API\\LOG430-TP\\LOG430-TP.csproj": {
-              "projectPath": "D:\\Users\\Nicolas\\Documents\\ETS\\Session8\\LOG430\\Lab1\\API\\LOG430-TP\\LOG430-TP.csproj"
+            "C:\\Users\\massy\\Dev\\LOG430-Lab\\LOG430-TP\\LOG430-TP.csproj": {
+              "projectPath": "C:\\Users\\massy\\Dev\\LOG430-Lab\\LOG430-TP\\LOG430-TP.csproj"
             }
           }
         }
@@ -4700,16 +4719,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1105",
-      "level": "Error",
-      "message": "Unable to find project information for 'D:\\Users\\Nicolas\\Documents\\ETS\\Session8\\LOG430\\Lab1\\API\\LOG430-TP\\LOG430-TP.csproj'. If you are using Visual Studio, this may be because the project is unloaded or not part of the current solution so run a restore from the command-line. Otherwise, the project file may be invalid or missing targets required for restore.",
-      "libraryId": "D:\\Users\\Nicolas\\Documents\\ETS\\Session8\\LOG430\\Lab1\\API\\LOG430-TP\\LOG430-TP.csproj",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    }
-  ]
+  }
 }

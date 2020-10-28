@@ -241,11 +241,11 @@ namespace LOG430_TP.ViewModels
             }
             List<ApplicationMessage> applicationMessages = new List<ApplicationMessage>();
 
-            var currentDate = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
+            var currentDate = DateTime.UtcNow;
             try
             {
 
-                applicationMessages = repos.GetApplicationMessages(_StatsTopicText, currentDate.AddSeconds(-10), currentDate).Result;
+                applicationMessages = repos.GetApplicationMessages(_StatsTopicText, currentDate.AddDays(-1), currentDate).Result;
 
             }
             catch (Exception e)
