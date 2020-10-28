@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "dgSpecHash": "9RLAt+PQxKy5mmnhp372Bznhm0KzIff8evU2FJWt6610P1Xewl0FOk0IAbl6IyewM49BGI9BfyLV5elCFUXxGA==",
-  "success": false,
+  "dgSpecHash": "dUOvl1RmQcHEBxgEPIulQvjQk6tXkJN2Meuhfv2xPjGrxlGwhWqTzJ5EhIl7wzsho7FyCQj+fv5w8F+Y8FEyBw==",
+  "success": true,
   "projectFilePath": "D:\\Users\\Nicolas\\Documents\\ETS\\Session8\\LOG430\\Lab1\\API\\NUnitTestProject\\NUnitTestProject.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nicolas\\.nuget\\packages\\microsoft.codecoverage\\16.4.0\\microsoft.codecoverage.16.4.0.nupkg.sha512",
@@ -68,15 +68,5 @@
     "C:\\Users\\Nicolas\\.nuget\\packages\\system.xml.xpath\\4.3.0\\system.xml.xpath.4.3.0.nupkg.sha512",
     "C:\\Users\\Nicolas\\.nuget\\packages\\system.xml.xpath.xmldocument\\4.3.0\\system.xml.xpath.xmldocument.4.3.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1105",
-      "level": "Error",
-      "message": "Unable to find project information for 'D:\\Users\\Nicolas\\Documents\\ETS\\Session8\\LOG430\\Lab1\\API\\LOG430-TP\\LOG430-TP.csproj'. If you are using Visual Studio, this may be because the project is unloaded or not part of the current solution so run a restore from the command-line. Otherwise, the project file may be invalid or missing targets required for restore.",
-      "libraryId": "D:\\Users\\Nicolas\\Documents\\ETS\\Session8\\LOG430\\Lab1\\API\\LOG430-TP\\LOG430-TP.csproj",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    }
-  ]
+  "logs": []
 }

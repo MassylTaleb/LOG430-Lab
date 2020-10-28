@@ -1225,6 +1225,15 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XPath.XmlDocument.dll": {}
         }
+      },
+      "LOG430-TP/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/LOG430-TP.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/LOG430-TP.dll": {}
+        }
       }
     }
   },
@@ -4618,11 +4627,16 @@
         "system.xml.xpath.xmldocument.4.3.0.nupkg.sha512",
         "system.xml.xpath.xmldocument.nuspec"
       ]
+    },
+    "LOG430-TP/1.0.0": {
+      "type": "project",
+      "path": "../LOG430-TP/LOG430-TP.csproj",
+      "msbuildProject": "../LOG430-TP/LOG430-TP.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
-      "D:\\Users\\Nicolas\\Documents\\ETS\\Session8\\LOG430\\Lab1\\API\\LOG430-TP\\LOG430-TP.csproj",
+      "LOG430-TP >= 1.0.0",
       "Microsoft.NET.Test.Sdk >= 16.4.0",
       "NUnit3TestAdapter >= 3.15.1",
       "nunit >= 3.12.0"
@@ -4700,16 +4714,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1105",
-      "level": "Error",
-      "message": "Unable to find project information for 'D:\\Users\\Nicolas\\Documents\\ETS\\Session8\\LOG430\\Lab1\\API\\LOG430-TP\\LOG430-TP.csproj'. If you are using Visual Studio, this may be because the project is unloaded or not part of the current solution so run a restore from the command-line. Otherwise, the project file may be invalid or missing targets required for restore.",
-      "libraryId": "D:\\Users\\Nicolas\\Documents\\ETS\\Session8\\LOG430\\Lab1\\API\\LOG430-TP\\LOG430-TP.csproj",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    }
-  ]
+  }
 }

@@ -245,7 +245,7 @@ namespace LOG430_TP.ViewModels
             try
             {
 
-                applicationMessages = repos.GetApplicationMessages(_StatsTopicText, currentDate.AddSeconds(-10), currentDate).Result;
+                applicationMessages = repos.GetApplicationMessages(_StatsTopicText, currentDate.AddDays(-1), currentDate).Result;
 
             }
             catch (Exception e)
