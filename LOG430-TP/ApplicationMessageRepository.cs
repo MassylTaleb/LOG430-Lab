@@ -34,6 +34,11 @@ namespace LOG430_TP
             _DataBase.ApplicationMessage.InsertOne(message);
         }
 
+        public void AddAggregator (AggregatorModel aggregator)
+        {
+            _DataBase.AggregatorModel.InsertOne(aggregator);
+        }
+
         public Task Delete(string id)
         {
             throw new NotImplementedException();
@@ -70,6 +75,25 @@ namespace LOG430_TP
 
             return _DataBase.ApplicationMessage.Find(x => x.Topic == topic   && x.DateTime >= startDate && x.DateTime < endDate).ToListAsync();
         }
+
+
+        public Task<List<AggregatorModel>> GetAggregatorModels(DateTime startDate, DateTime endDate)
+        {
+
+            return _DataBase.AggregatorModel.Find(x => x.DateTime >= startDate && x.DateTime < endDate).ToListAsync();
+
+        }
+
+        public Task<List<AggregatorModel>> GetAggregatorModels (string topic, DateTime startDate, DateTime endDate)
+        {
+            if (String.IsNullOrEmpty(topic))
+                return this.GetAggregatorModels(startDate, endDate);
+
+
+            return _DataBase.AggregatorModel.Find(x => x.Topic == topic && x.DateTime >= startDate && x.DateTime < endDate).ToListAsync();
+
+        }
+
 
         public Task Update(ApplicationMessage message)
         {
