@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace LOG430_TP.ViewModels
 {
@@ -28,6 +29,7 @@ namespace LOG430_TP.ViewModels
         private static readonly string _ApplicationMessagePayloadValueRegexPattern = "\"Value\":(?<value>.+)}";
         private static readonly string _ApplicationMessagePayloadCreateUTCRegexPattern = "\"CreateUtc\":\"(?<createUtc>.+?)\"";
         private ApplicationMessageRepository repos;
+        private DispatcherTimer _Timer;
 
         public ObservableCollection<ApplicationMessage> MessagesCache { get; set; }
 
@@ -130,6 +132,9 @@ namespace LOG430_TP.ViewModels
 
         public MainViewModel()
         {
+            _Timer = new DispatcherTimer();
+            _Timer.Interval = TimeSpan.FromSeconds(10);
+            _Timer.Tick += timer_Tick;
             Controller = new MqttController();
             Controller.ApplicationMessagedReceived += MessageReceived;
             MessagesCache = new ObservableCollection<ApplicationMessage>();
@@ -168,6 +173,14 @@ namespace LOG430_TP.ViewModels
 
             var y = 4;
 
+        }
+
+        void timer_Tick(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_StatsTopicText)){
+                ComputeStats();
+            }
+            
         }
 
         /// <summary>
@@ -219,13 +232,20 @@ namespace LOG430_TP.ViewModels
 
         private void ComputeStats()
         {
+            
+            _Timer.Start();
 
+            if(DateTime.Now >= _StatsEndDateTime)
+            {
+                _Timer.Stop();
+            }
             List<ApplicationMessage> applicationMessages = new List<ApplicationMessage>();
 
+            var currentDate = DateTime.UtcNow;
             try
             {
 
-                applicationMessages = repos.GetApplicationMessages(_StatsTopicText, _StatsStartDateTime, StatsEndDateTime).Result;
+                applicationMessages = repos.GetApplicationMessages(_StatsTopicText, currentDate.AddDays(-1), currentDate).Result;
 
             }
             catch (Exception e)
@@ -240,7 +260,15 @@ namespace LOG430_TP.ViewModels
 
             // uses the good compute
             if (values.Count > 0)
+            {
                 CurrentStatisticResult = statisticComputer.Compute(values);
+
+                // to trick mango db
+
+                var aggregatorValue = new AggregatorModel { Topic = _StatsTopicText, Type = _CurrentStatistic.ToString(), Value = CurrentStatisticResult, DateTime = currentDate };
+                repos.AddAggregator(aggregatorValue);
+            }
+                
         }
 
         /*

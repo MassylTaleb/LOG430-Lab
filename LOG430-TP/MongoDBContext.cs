@@ -24,5 +24,14 @@ namespace LOG430_TP
                 return _db.GetCollection<ApplicationMessage>("ApplicationMessage");
             }
         }
+
+        public IMongoCollection<AggregatorModel> AggregatorModel
+        {
+
+            get
+            {
+                return _db.GetCollection<AggregatorModel>("AggregatorModel");
+            }
+        }
     }
 }
