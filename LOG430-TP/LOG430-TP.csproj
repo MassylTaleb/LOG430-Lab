@@ -192,6 +192,8 @@
     <Compile Include="IApplicationMessageRepository.cs" />
     <Compile Include="IMongoDBContext.cs" />
     <Compile Include="Models\StatisticComputers\MeanComputer.cs" />
+    <Compile Include="Models\StatisticComputers\MeanComputer2.cs" />
+    <Compile Include="Models\StatisticComputers\MedianComputer2.cs" />
     <Compile Include="Models\StatisticComputers\MedianComputer.cs" />
     <Compile Include="Models\StatisticComputers\StandardDeviationComputer.cs" />
     <Compile Include="Models\StatisticComputers\SumComputer.cs" />

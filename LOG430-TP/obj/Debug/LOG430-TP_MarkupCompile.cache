@@ -4,16 +4,28 @@
 winexe
 C#
 .cs
+<<<<<<< HEAD
 c:\Users\Ishr_\OneDrive - ETS\ETS Semester - 9\LOG430\Laboratory\Lab2\LOG430-Lab\LOG430-TP\obj\Debug\
+=======
+D:\Users\Nicolas\Documents\ETS\Session8\LOG430\Lab1\API\LOG430-TP\obj\Debug\
+>>>>>>> 28920b697be06368516cac74c79073bab8eed1ea
 LOG430_TP
 none
 false
 DEBUG;TRACE
+<<<<<<< HEAD
 c:\Users\Ishr_\OneDrive - ETS\ETS Semester - 9\LOG430\Laboratory\Lab2\LOG430-Lab\LOG430-TP\App.xaml
 1-587587561
 71757822526
 22-512208148
 139-62855034
+=======
+D:\Users\Nicolas\Documents\ETS\Session8\LOG430\Lab1\API\LOG430-TP\App.xaml
+11892971807
+7783792940
+23771209773
+1391766304541
+>>>>>>> 28920b697be06368516cac74c79073bab8eed1ea
 Views\MainWindow.xaml;
 
 True
