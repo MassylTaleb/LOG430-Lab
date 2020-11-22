@@ -265,6 +265,7 @@ namespace LOG430_TP.ViewModels
         private void ComputeStats()
         {
 
+            
             _Timer.Start();
 
             if (DateTime.Now >= _StatsEndDateTime)
@@ -287,14 +288,34 @@ namespace LOG430_TP.ViewModels
             }
 
             var values = this.applicationMessageValuesList(applicationMessages);
-            if (!_StatisticComputers.TryGetValue(_CurrentStatistic, out IStatisticComputer<float, float> statisticComputer))
+
+            if (!_StatisticComputers.TryGetValue(_CurrentStatistic, out IStatisticComputer<float, float> statisticComputer) && !_IsCrashed)
                 return;
+            
+            if(_CurrentStatistic.Equals(Statistic.Mean) && _IsCrashed)
+            {
+                statisticComputer = new MeanComputer2();
+                Console.WriteLine("Mean computer crashed. Using second method");
+            }
 
             // uses the good compute
             if (values.Count > 0)
             {
-                CurrentStatisticResult = statisticComputer.Compute(values);
 
+                if (_CurrentStatistic.Equals(Statistic.Median))
+                {
+                    var delay = 2;
+                    Task result = Task.Run(() => { ComputeDelay(statisticComputer, values, delay); });
+                    var isTimeOut = !result.Wait(4000, CancellationToken.None);
+
+                    if (isTimeOut)
+                    {
+                        statisticComputer = new MedianComputer2();
+                        Console.WriteLine("Median Computer Timeout. Using second method");
+                    }
+                }
+
+                CurrentStatisticResult = statisticComputer.Compute(values);
                 // to trick mango db
 
                 var aggregatorValue = new AggregatorModel { Topic = _StatsTopicText, Type = _CurrentStatistic.ToString(), Value = CurrentStatisticResult, DateTime = currentDate };
@@ -302,60 +323,6 @@ namespace LOG430_TP.ViewModels
             }
 
         }
-
-        /*
-        private void ComputeStats()
-        {
-
-            var applicationMessages = ApplicationMessageRepository.Instance.getApplicationMessages(_StatsTopicText, _StatsStartDateTime, StatsEndDateTime);
-
-            var values = this.applicationMessageValuesList(applicationMessages.Result);
-
-            //CurrentStatisticResult = 0;
-
-            //var messages = ApplicationMessageRepository.Instance.GetApplicationMessages()?.Result;
-
-            //Regex valueRegex = new Regex(_ApplicationMessagePayloadValueRegexPattern);
-            //Regex utcRegex = new Regex(_ApplicationMessagePayloadCreateUTCRegexPattern);
-
-            //if (messages == null)
-            //    return;
-
-            //List<float> values = new List<float>();
-
-            //foreach (var message in messages)
-            //{
-            //    if (message.Topic != _StatsTopicText)
-            //        continue;
-
-            //    Match valueMatch = valueRegex.Match(message.Payload);
-            //    Match utcMatch = utcRegex.Match(message.Payload);
-
-            //    if (!valueMatch.Success || !utcMatch.Success)
-            //        continue;
-
-            //    string value = valueMatch.Groups["value"].Value;
-            //    string utcString = utcMatch.Groups["createUtc"].Value;
-
-
-            //    // check date
-            //    if (!DateTime.TryParse(utcString, out DateTime createUtcTime) || !float.TryParse(value, out float floatValue))
-            //        continue;
-
-            //    if (createUtcTime > StatsStartDateTime.ToUniversalTime() && createUtcTime < StatsEndDateTime.ToUniversalTime())
-            //        values.Add(floatValue);
-            //    else
-            //        continue;
-            //}
-
-            if (!_StatisticComputers.TryGetValue(_CurrentStatistic, out IStatisticComputer<float, float> statisticComputer))
-                return;
-
-            // uses the good compute
-            if(values.Count > 0)
-                CurrentStatisticResult = statisticComputer.Compute(values);
-        }*/
-
 
         private List<float> applicationMessageValuesList(List<ApplicationMessage> messages)
         {
@@ -396,6 +363,13 @@ namespace LOG430_TP.ViewModels
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
+
+
+        public async Task<float> ComputeDelay(IStatisticComputer<float,float> statisticComputer,List<float> values, int delay) 
+        {
+            Task.Delay(delay*1000).Wait();
+            return statisticComputer.Compute(values);
+        }
     }
 
     public enum Statistic
