@@ -241,7 +241,7 @@ namespace LOG430_TP.ViewModels
             }
             List<ApplicationMessage> applicationMessages = new List<ApplicationMessage>();
 
-            var currentDate = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
+            var currentDate = DateTime.UtcNow;
             try
             {
 
