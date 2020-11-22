@@ -24,7 +24,7 @@ using System.Windows.Threading;
 
 namespace LOG430_TP.ViewModels
 {
-    public class MainViewModel : INotifyPropertyChanged 
+    public class MainViewModel : INotifyPropertyChanged
     {
         private static readonly string _ApplicationMessagePayloadValueRegexPattern = "\"Value\":(?<value>.+)}";
         private static readonly string _ApplicationMessagePayloadCreateUTCRegexPattern = "\"CreateUtc\":\"(?<createUtc>.+?)\"";
@@ -40,6 +40,14 @@ namespace LOG430_TP.ViewModels
         {
             get => _IsScubscribedToAll;
             set => SetPropertyBackingField(ref _IsScubscribedToAll, value);
+        }
+
+        private bool _IsCrashed;
+
+        public bool IsCrashed
+        {
+            get => _IsCrashed;
+            set => SetPropertyBackingField(ref _IsCrashed, value);
         }
 
         private string _TopicSubscribeText;
@@ -62,6 +70,24 @@ namespace LOG430_TP.ViewModels
                 SetPropertyBackingField(ref _TopicUnsubscribeText, value);
                 CanUnsubscribe = !string.IsNullOrEmpty(_TopicUnsubscribeText);
             }
+        }
+
+        private string _DelayValueText;
+        public string DelayValueText
+        {
+            get => _DelayValueText;
+            set
+            {
+                SetPropertyBackingField(ref _DelayValueText, value);
+                CanDelay = !string.IsNullOrEmpty(_DelayValueText);
+            }
+        }
+
+        private bool _CanDelay;
+        public bool CanDelay
+        {
+            get => _CanDelay;
+            set => SetPropertyBackingField(ref _CanDelay, value);
         }
 
         private bool _CanSubscribe;
@@ -129,6 +155,7 @@ namespace LOG430_TP.ViewModels
         public ICommand ClearMessagesCommand { get; }
         public ICommand ToggleShowStatsCommand { get; }
         public ICommand ComputeStatsCommand { get; }
+        public ICommand DelayCommand { get; }
 
         public MainViewModel()
         {
@@ -149,7 +176,7 @@ namespace LOG430_TP.ViewModels
             ClearMessagesCommand = new RelayCommand(ClearMessages);
             ToggleShowStatsCommand = new RelayCommand(() => ShowStats = !ShowStats);
             ComputeStatsCommand = new RelayCommand(ComputeStats, () => !string.IsNullOrWhiteSpace(_StatsTopicText));
-
+            DelayCommand = new RelayCommand(Delay, () => CanDelay);
             _StatsStartDateTime = DateTime.Now.AddHours(-24);
             _StatsEndDateTime = DateTime.Now;
 
@@ -168,7 +195,7 @@ namespace LOG430_TP.ViewModels
             var testRepos = ApplicationMessageRepository.Instance;
             var startDate = DateTime.SpecifyKind(new DateTime(2020, 10, 26, 20, 20, 25), DateTimeKind.Utc);
             var endDate = DateTime.SpecifyKind(new DateTime(2020, 10, 26, 20, 20, 28), DateTimeKind.Utc);
-            var x  = testRepos.GetApplicationMessages(startDate,endDate);
+            var x = testRepos.GetApplicationMessages(startDate, endDate);
             x.Wait();
 
             var y = 4;
@@ -177,10 +204,11 @@ namespace LOG430_TP.ViewModels
 
         void timer_Tick(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(_StatsTopicText)){
+            if (!string.IsNullOrEmpty(_StatsTopicText))
+            {
                 ComputeStats();
             }
-            
+
         }
 
         /// <summary>
@@ -191,7 +219,7 @@ namespace LOG430_TP.ViewModels
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                if(MessagesCache.Count >= 20)
+                if (MessagesCache.Count >= 20)
                     MessagesCache.RemoveAt(0);
 
                 MessagesCache.Add(applicationMessage);
@@ -202,6 +230,11 @@ namespace LOG430_TP.ViewModels
         private void ClearMessages()
         {
             MessagesCache.Clear();
+        }
+
+        private void Delay()
+        {
+            /*Cest ici que vous faite le code pour faire le delay*/
         }
 
         private void Subscribe()
@@ -229,13 +262,12 @@ namespace LOG430_TP.ViewModels
         }
 
 
-
         private void ComputeStats()
         {
-            
+
             _Timer.Start();
 
-            if(DateTime.Now >= _StatsEndDateTime)
+            if (DateTime.Now >= _StatsEndDateTime)
             {
                 _Timer.Stop();
             }
@@ -268,7 +300,7 @@ namespace LOG430_TP.ViewModels
                 var aggregatorValue = new AggregatorModel { Topic = _StatsTopicText, Type = _CurrentStatistic.ToString(), Value = CurrentStatisticResult, DateTime = currentDate };
                 repos.AddAggregator(aggregatorValue);
             }
-                
+
         }
 
         /*
@@ -325,7 +357,7 @@ namespace LOG430_TP.ViewModels
         }*/
 
 
-        private List<float> applicationMessageValuesList (List<ApplicationMessage> messages)
+        private List<float> applicationMessageValuesList(List<ApplicationMessage> messages)
         {
             var values = new List<float>();
 
@@ -367,7 +399,7 @@ namespace LOG430_TP.ViewModels
     }
 
     public enum Statistic
-    { 
+    {
         Mean,
         Median,
         StandardDeviation

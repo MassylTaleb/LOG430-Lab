@@ -36,13 +36,16 @@
             <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        
+
         <DockPanel Grid.Column="0" LastChildFill="True">
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                 <TextBox Text="{Binding TopicSubscribeText}" HorizontalAlignment="Left" Margin="14,0,0,0" VerticalAlignment="Top" Width="70"/>
                 <Button Content="Subscibe" Margin="8,0,0,0" Command="{Binding SubscribeCommand}"/>
+                <ToggleButton Content="Crash" Margin="8,0,0,0" IsChecked="{Binding IsCrashed}"/>
                 <TextBox Text="{Binding TopicUnsubscribeText}" HorizontalAlignment="Right" Margin="30,0,0,0" VerticalAlignment="Top" Width="70"/>
                 <Button Content="Unsubscibe" Margin="8,0,0,0" Command="{Binding UnsubscribeCommand}"/>
+                <TextBox Text="{Binding DelayValueText}" HorizontalAlignment="Right" Margin="30,0,0,0" VerticalAlignment="Top" Width="70"/>
+                <Button Content="Delay" Margin="8,0,0,0" Command="{Binding DelayCommand}"/>
                 <Button Content="Subscibe All" Margin="8,0,0,0" Command="{Binding SubscribeAllCommand}"/>
                 <Button Content="Unsubscibe All" Margin="8,0,0,0" Command="{Binding UnsubscribeAllCommand}"/>
                 <ToggleButton Content="Show Stats" Margin="8,0,0,0" Command="{Binding ToggleShowStatsCommand}"/>
@@ -70,13 +73,13 @@
                 </ItemsControl>
             </ScrollViewer>
         </DockPanel>
-        
+
         <DockPanel LastChildFill="False" Margin="4" Grid.Column="1" Grid.Row="0" Visibility="{Binding ShowStats, Converter={StaticResource BoolToVisibilityConverter}}">
             <StackPanel DockPanel.Dock="Top">
                 <TextBlock Text="Start Time"/>
                 <xceed:DateTimePicker Format="Custom" FormatString="ddd, dd MMMM yyyy HH:mm" TextAlignment="Left" Value="{Binding StatsStartDateTime}"/>
             </StackPanel>
-            
+
             <StackPanel DockPanel.Dock="Top">
                 <TextBlock Text="End Time"/>
                 <xceed:DateTimePicker Format="Custom" FormatString="ddd, dd MMMM yyyy HH:mm" TextAlignment="Left" Value="{Binding StatsEndDateTime}"/>
@@ -89,7 +92,7 @@
             <TextBox DockPanel.Dock="Top" Text="{Binding StatsTopicText}" HorizontalAlignment="Left" Height="20" Width="200"/>
 
             <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Width="75" Content="Compute" Command="{Binding ComputeStatsCommand}"/>
-            
+
             <StackPanel Margin="0,0,0,15" DockPanel.Dock="Bottom" Orientation="Horizontal">
                 <TextBlock Text="Result:" Margin="0,0,4,0"/>
                 <TextBlock Text="{Binding CurrentStatisticResult}"/>
