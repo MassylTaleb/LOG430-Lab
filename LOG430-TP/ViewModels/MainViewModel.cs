@@ -47,7 +47,13 @@ namespace LOG430_TP.ViewModels
         public bool IsCrashed
         {
             get => _IsCrashed;
-            set => SetPropertyBackingField(ref _IsCrashed, value);
+            set
+            {
+                SetPropertyBackingField(ref _IsCrashed, value);
+
+                if (IsCrashed)
+                    Console.WriteLine("Mean compute has crashed");
+            }
         }
 
         private string _TopicSubscribeText;
@@ -304,7 +310,9 @@ namespace LOG430_TP.ViewModels
 
                 if (_CurrentStatistic.Equals(Statistic.Median))
                 {
-                    var delay = 2;
+                    var delay = 0;
+                    int.TryParse(_DelayValueText, out delay);
+                    Console.WriteLine($"Delay is : {delay}s");
                     Task result = Task.Run(() => { ComputeDelay(statisticComputer, values, delay); });
                     var isTimeOut = !result.Wait(4000, CancellationToken.None);
 
@@ -313,6 +321,7 @@ namespace LOG430_TP.ViewModels
                         statisticComputer = new MedianComputer2();
                         Console.WriteLine("Median Computer Timeout. Using second method");
                     }
+
                 }
 
                 CurrentStatisticResult = statisticComputer.Compute(values);
