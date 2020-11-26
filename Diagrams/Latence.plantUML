@@ -1,0 +1,44 @@
+@startuml
+
+opt _CurrentStatistic == Statistic.Mean 
+activate MainViewModel.cs
+MainViewModel.cs -> MainViewModel.cs : delay = 0
+MainViewModel.cs -> MainViewModel.cs : TryParse(_DelayValueText, out delay)
+activate MainViewModel.cs
+deactivate MainViewModel.cs
+
+MainViewModel.cs -> MainViewModel.cs : Prints Delay()
+activate MainViewModel.cs
+deactivate MainViewModel.cs
+
+MainViewModel.cs -> MainViewModel.cs : result = ComputeDelay(statisticComputer, values, delay)
+activate MainViewModel.cs
+deactivate MainViewModel.cs
+
+MainViewModel.cs -> MainViewModel.cs : isTimeOut = !result.Wait(4000, Cancellation.None)
+activate MainViewModel.cs
+deactivate MainViewModel.cs
+
+opt isTimeOut
+MainViewModel.cs -> MeanComputer2.cs**: statisticComputer = create()
+MainViewModel.cs -> MainViewModel.cs: WriteLine("Median Computer Timeout. Using second method")
+activate MainViewModel.cs
+deactivate MainViewModel.cs
+end
+MainViewModel.cs -> MeanComputer2.cs : compute(values)
+activate MeanComputer2.cs
+MeanComputer2.cs --> MainViewModel.cs: CurrentStatisticResult
+deactivate MeanComputer2.cs
+
+MainViewModel.cs -> AggregatorModel.cs**: aggregatorValue = create(Topic = _StatsTopicText, Type = _CurrentStatistic.ToString(), Value = CurrentStatisticResult, DateTime = currentDate)
+
+MainViewModel.cs -> ApplicationMessageRepository.cs: AddAggregator(aggregatorValue)
+activate MainViewModel.cs
+activate ApplicationMessageRepository.cs
+
+ApplicationMessageRepository.cs -> ApplicationMessageRepository.cs : AddAggregator(aggregatorValue)
+activate ApplicationMessageRepository.cs
+ApplicationMessageRepository.cs -> MongoDB.cs: InsertOne(aggregator)
+activate MongoDB.cs
+deactivate MongoDB.cs
+@enduml

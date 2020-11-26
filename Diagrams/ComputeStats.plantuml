@@ -1,0 +1,46 @@
+@startuml Second
+
+activate MainViewModel.cs
+MainViewModel.cs -> MainViewModel.cs: ComputeStats()
+activate MainViewModel.cs
+MainViewModel.cs -> DispatcherTimer.cs : _Timer.Start()
+activate DispatcherTimer.cs
+deactivate DispatcherTimer.cs
+
+opt DateTime.Now >= StatsEndDateTime
+    MainViewModel.cs -> DispatcherTimer.cs:_Timer.Stop()
+activate DispatcherTimer.cs
+deactivate DispatcherTimer.cs
+end
+
+MainViewModel.cs -> ApplicationMessage** : applicationMessages = create()
+
+MainViewModel.cs -> MainViewModel.cs : currentDate =  DateTime.UtcNow
+activate MainViewModel.cs
+
+deactivate MainViewModel.cs
+MainViewModel.cs -> ApplicationMessageRepository.cs: GetApplicationMessages(_StatsTopicText, currentDate.AddDays(-1), currentDate).Result)
+activate  ApplicationMessageRepository.cs
+
+  
+opt String.IsNullOrEmpty(topic)
+ ApplicationMessageRepository.cs ->  ApplicationMessageRepository.cs: GetApplicationMessages(startDate, endDate)
+activate   ApplicationMessageRepository.cs
+ ApplicationMessageRepository.cs -> MongoDBContext.cs:_DataBase.ApplicationMessage.Find(x => x.DateTime >= startDate && x.DateTime < endDate).ToListAsync()
+activate MongoDBContext.cs
+MongoDBContext.cs --> ApplicationMessageRepository.cs: applicationMessages
+end
+ ApplicationMessageRepository.cs -> MongoDBContext.cs:_DataBase.ApplicationMessage.Find(x => x.Topic == topic && x.DateTime >= startDate && x.DateTime < endDate).ToListAsync();
+MongoDBContext.cs --> ApplicationMessageRepository.cs: applicationMessages
+ ApplicationMessageRepository.cs --> MainViewModel.cs: applicationMessages
+
+alt catch Exception
+MainViewModel.cs -> ApplicationMessage: Show("Could not connect to own database.", "error", MessageBoxButton.OK, MessageBoxImage.Error)
+activate ApplicationMessage
+deactivate ApplicationMessage
+end
+
+MainViewModel.cs -> MainViewModel.cs : values = applicationsValuesList(applicationsMessages)
+activate MainViewModel.cs
+deactivate MainViewModel.cs
+@enduml

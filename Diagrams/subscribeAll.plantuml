@@ -1,0 +1,21 @@
+@startuml First
+actor Client
+
+
+activate Client
+'Subscribe All Function'
+Client ->  MainViewModel.cs: Click 'Subscribe All' Button
+activate MainViewModel.cs
+MainViewModel.cs -> Controller.cs: SubscribeAll() 
+
+activate Controller.cs
+Controller.cs -> Controller.cs: SubscribeALL()
+activate Controller.cs
+Controller.cs -> Controller.cs: SubscribeAsync(new TopicFilterBuilder().WithTopic(BaseTopic +"#").Build())
+activate Controller.cs
+deactivate Controller.cs
+deactivate Controller.cs
+MainViewModel.cs -> MainViewModel.cs  : IsSubscribetoAll = true
+activate MainViewModel.cs
+deactivate MainViewModel.cs
+@enduml

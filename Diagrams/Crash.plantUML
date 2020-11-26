@@ -1,0 +1,27 @@
+@startuml
+
+opt _CurrentStatistic == Statistic.Mean && _IsCrashed == true
+activate MainViewModel.cs
+MainViewModel.cs -> MeanComputer2.cs**: statisticComputer = create()
+MainViewModel.cs -> Console.cs : WriteLine("Mean computer crashed. Using second method")
+activate MainViewModel.cs
+activate Console.cs
+end
+
+MainViewModel.cs -> MeanComputer2.cs : compute(values)
+activate MeanComputer2.cs
+MeanComputer2.cs --> MainViewModel.cs: CurrentStatisticResult
+deactivate MeanComputer2.cs
+
+MainViewModel.cs -> AggregatorModel.cs**: aggregatorValue = create(Topic = _StatsTopicText, Type = _CurrentStatistic.ToString(), Value = CurrentStatisticResult, DateTime = currentDate)
+
+MainViewModel.cs -> ApplicationMessageRepository.cs: AddAggregator(aggregatorValue)
+activate MainViewModel.cs
+activate ApplicationMessageRepository.cs
+
+ApplicationMessageRepository.cs -> ApplicationMessageRepository.cs : AddAggregator(aggregatorValue)
+activate ApplicationMessageRepository.cs
+ApplicationMessageRepository.cs -> MongoDB.cs: InsertOne(aggregator)
+activate MongoDB.cs
+deactivate MongoDB.cs
+@enduml

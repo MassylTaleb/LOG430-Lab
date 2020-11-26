@@ -36,7 +36,7 @@ namespace LOG430_TP.ViewModels
         public MqttController Controller { get; private set; }
 
         private bool _IsScubscribedToAll;
-        public bool IsScubscribedToAll
+        public bool IsSubscribedToAll
         {
             get => _IsScubscribedToAll;
             set => SetPropertyBackingField(ref _IsScubscribedToAll, value);
@@ -177,8 +177,8 @@ namespace LOG430_TP.ViewModels
 
             SubscribeCommand = new RelayCommand(Subscribe, () => CanSubscribe);
             UnsubscribeCommand = new RelayCommand(Unsubscribe, () => CanUnsubscribe);
-            SubscribeAllCommand = new RelayCommand(SubscribeAll, () => !IsScubscribedToAll);
-            UnsubscribeAllCommand = new RelayCommand(UnsubscribeAll, () => IsScubscribedToAll);
+            SubscribeAllCommand = new RelayCommand(SubscribeAll, () => !IsSubscribedToAll);
+            UnsubscribeAllCommand = new RelayCommand(UnsubscribeAll, () => IsSubscribedToAll);
             ClearMessagesCommand = new RelayCommand(ClearMessages);
             ToggleShowStatsCommand = new RelayCommand(() => ShowStats = !ShowStats);
             ComputeStatsCommand = new RelayCommand(ComputeStats, () => !string.IsNullOrWhiteSpace(_StatsTopicText));
@@ -258,13 +258,13 @@ namespace LOG430_TP.ViewModels
         private void SubscribeAll()
         {
             Controller.subscribeALL();
-            IsScubscribedToAll = true;
+            IsSubscribedToAll = true;
         }
 
         private void UnsubscribeAll()
         {
             Controller.unsubscribeALL();
-            IsScubscribedToAll = false;
+            IsSubscribedToAll = false;
         }
 
 
